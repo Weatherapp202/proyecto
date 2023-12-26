@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import User from "./routes/user/user.routes";
 import Admin from "./routes/admin/admin.routes";
+import Login from "./routes/login/login.routes";
 
 const app = express();
 app.use(express.json());
@@ -21,6 +22,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use("/", User);
 app.use("/", Admin);
+app.use("/", Login);
 
 app.listen(port, () => {
   console.log("listening on port " + port + "🏗️");
