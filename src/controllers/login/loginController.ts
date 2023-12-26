@@ -14,6 +14,7 @@ export const loginService = async (req: Request, res: Response) => {
     userFounded.password === password &&
       res.send({
         message: "login success",
+        role: userFounded.role,
       });
   } else {
     res.status(404).json({ message: "login failed" });

@@ -22,6 +22,7 @@ const loginService = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         userFounded.password === password &&
             res.send({
                 message: "login success",
+                role: userFounded.role,
             });
     }
     else {
