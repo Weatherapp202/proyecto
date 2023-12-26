@@ -16,6 +16,6 @@ export const loginService = async (req: Request, res: Response) => {
         message: "login success",
       });
   } else {
-    res.send({ message: "login failed" });
+    res.status(404).json({ message: "login failed" });
   }
 };

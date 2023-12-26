@@ -25,7 +25,7 @@ const loginService = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             });
     }
     else {
-        res.send({ message: "login failed" });
+        res.status(404).json({ message: "login failed" });
     }
 });
 exports.loginService = loginService;
