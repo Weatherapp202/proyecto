@@ -13,19 +13,24 @@ exports.loginService = void 0;
 const index_routes_1 = require("../../routes/index.routes");
 const loginService = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
-    const userFounded = yield index_routes_1.prismaClient.user.findFirst({
-        where: {
-            name: username,
-        },
-    });
-    if (userFounded) {
-        userFounded.password === password &&
-            res.send({
-                message: "login success",
-                role: userFounded.role,
-            });
+    try {
+        const userFounded = yield index_routes_1.prismaClient.user.findFirst({
+            where: {
+                name: username,
+            },
+        });
+        if (userFounded) {
+            userFounded.password === password &&
+                res.send({
+                    message: "login success",
+                    role: userFounded.role,
+                });
+        }
+        else {
+            res.status(404).json({ message: "login failed" });
+        }
     }
-    else {
+    catch (error) {
         res.status(404).json({ message: "login failed" });
     }
 });
