@@ -78,3 +78,76 @@ export const deleteUser = async (req: Request, res: Response) => {
     errorMessage(res, error);
   }
 };
+
+export const addPermision = async (req: Request, res: Response) => {
+  const { id, permissionName } = req.body;
+
+  try {
+    const userFounded = await prismaClient.user.findFirst({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (userFounded) {
+      const permissionCreated = await prismaClient.permission.create({
+        data: {
+          name: permissionName,
+          user: {
+            connect: {
+              id: Number(id),
+            },
+          },
+        },
+      });
+
+      successfullyMessage(res, "Permission successfully added", permissionCreated);
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    errorMessage(res, error);
+  }
+};
+export const deletePermissionInUser = async (req: Request, res: Response) => {
+  const { id, permissionName } = req.body;
+
+  try {
+    const userFounded = await prismaClient.user.findFirst({
+      where: {
+        id: Number(id),
+      },
+    });
+
+    if (userFounded) {
+      const permission = await prismaClient.permission.findFirst({
+        where: {
+          name: permissionName,
+        },
+      });
+
+      if (permission) {
+        const updatedUser = await prismaClient.user.update({
+          where: {
+            id: Number(id),
+          },
+          data: {
+            permissions: {
+              disconnect: {
+                id: permission.id,
+              },
+            },
+          },
+        });
+
+        successfullyMessage(res, "Permission successfully deleted from user", updatedUser);
+      } else {
+        res.status(404).json({ message: "Permission not found" });
+      }
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
+  } catch (error) {
+    errorMessage(res, error);
+  }
+};

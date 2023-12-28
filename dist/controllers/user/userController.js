@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.addUser = exports.updateUser = exports.getUserByID = exports.getAllUsers = void 0;
+exports.deletePermissionInUser = exports.addPermision = exports.deleteUser = exports.addUser = exports.updateUser = exports.getUserByID = exports.getAllUsers = void 0;
 const index_routes_1 = require("../../routes/index.routes");
 const functions_1 = require("../functions/functions");
 const getAllUsers = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -90,3 +90,75 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deleteUser = deleteUser;
+const addPermision = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, permissionName } = req.body;
+    try {
+        const userFounded = yield index_routes_1.prismaClient.user.findFirst({
+            where: {
+                id: Number(id),
+            },
+        });
+        if (userFounded) {
+            const permissionCreated = yield index_routes_1.prismaClient.permission.create({
+                data: {
+                    name: permissionName,
+                    user: {
+                        connect: {
+                            id: Number(id),
+                        },
+                    },
+                },
+            });
+            (0, functions_1.successfullyMessage)(res, "Permission successfully added", permissionCreated);
+        }
+        else {
+            res.status(404).json({ message: "User not found" });
+        }
+    }
+    catch (error) {
+        (0, functions_1.errorMessage)(res, error);
+    }
+});
+exports.addPermision = addPermision;
+const deletePermissionInUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id, permissionName } = req.body;
+    try {
+        const userFounded = yield index_routes_1.prismaClient.user.findFirst({
+            where: {
+                id: Number(id),
+            },
+        });
+        if (userFounded) {
+            const permission = yield index_routes_1.prismaClient.permission.findFirst({
+                where: {
+                    name: permissionName,
+                },
+            });
+            if (permission) {
+                const updatedUser = yield index_routes_1.prismaClient.user.update({
+                    where: {
+                        id: Number(id),
+                    },
+                    data: {
+                        permissions: {
+                            disconnect: {
+                                id: permission.id,
+                            },
+                        },
+                    },
+                });
+                (0, functions_1.successfullyMessage)(res, "Permission successfully deleted from user", updatedUser);
+            }
+            else {
+                res.status(404).json({ message: "Permission not found" });
+            }
+        }
+        else {
+            res.status(404).json({ message: "User not found" });
+        }
+    }
+    catch (error) {
+        (0, functions_1.errorMessage)(res, error);
+    }
+});
+exports.deletePermissionInUser = deletePermissionInUser;
