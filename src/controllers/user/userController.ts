@@ -87,15 +87,34 @@ export const addPermision = async (req: Request, res: Response) => {
       where: {
         id: Number(id),
       },
+      include: {
+        permissions: true, // Include current permissions
+      },
     });
 
     if (userFounded) {
+      // Disconnect all existing permissions
+      const disconnectPermissions = userFounded.permissions.map((permission) => ({
+        id: permission.id,
+      }));
+
+      // Create new permission
       const permissionCreated = await prismaClient.permission.create({
         data: {
           name: permissionName,
-          user: {
+        },
+      });
+
+      // Update user to disconnect old permissions and connect new one
+      await prismaClient.user.update({
+        where: {
+          id: Number(id),
+        },
+        data: {
+          permissions: {
+            disconnect: disconnectPermissions,
             connect: {
-              id: Number(id),
+              id: permissionCreated.id,
             },
           },
         },
@@ -109,6 +128,7 @@ export const addPermision = async (req: Request, res: Response) => {
     errorMessage(res, error);
   }
 };
+
 export const deletePermissionInUser = async (req: Request, res: Response) => {
   const { id, permissionName } = req.body;
 

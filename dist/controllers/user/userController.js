@@ -97,14 +97,31 @@ const addPermision = (req, res) => __awaiter(void 0, void 0, void 0, function* (
             where: {
                 id: Number(id),
             },
+            include: {
+                permissions: true, // Include current permissions
+            },
         });
         if (userFounded) {
+            // Disconnect all existing permissions
+            const disconnectPermissions = userFounded.permissions.map((permission) => ({
+                id: permission.id,
+            }));
+            // Create new permission
             const permissionCreated = yield index_routes_1.prismaClient.permission.create({
                 data: {
                     name: permissionName,
-                    user: {
+                },
+            });
+            // Update user to disconnect old permissions and connect new one
+            yield index_routes_1.prismaClient.user.update({
+                where: {
+                    id: Number(id),
+                },
+                data: {
+                    permissions: {
+                        disconnect: disconnectPermissions,
                         connect: {
-                            id: Number(id),
+                            id: permissionCreated.id,
                         },
                     },
                 },
