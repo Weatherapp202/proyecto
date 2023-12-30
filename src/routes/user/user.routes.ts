@@ -15,7 +15,7 @@ router.get("/user", getAllUsers);
 router.get("/user/:id", getUserByID);
 router.patch("/user/updateUser", updateUser);
 router.post("/user/newUser", addUser);
-router.delete("/user/deleteUser", deleteUser);
+router.post("/user/deleteUser", deleteUser);
 router.post("/permission/addPermision", addPermision);
 router.post("/permission/deletePermission", deletePermissionInUser);
 
