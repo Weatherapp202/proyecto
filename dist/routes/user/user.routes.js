@@ -11,5 +11,5 @@ index_routes_1.router.post("/user/deleteUser", userController_1.deleteUser);
 index_routes_1.router.post("/permission/addPermision", userController_1.addPermision);
 index_routes_1.router.post("/permission/deletePermission", userController_1.deletePermissionInUser);
 index_routes_1.router.post("/user/makeAdmin", userController_1.makeAdmin);
-index_routes_1.router.post("user/deleteAdmin", userController_1.deleteAdmin);
+index_routes_1.router.post("/user/deleteAdmin", userController_1.deleteAdmin);
 exports.default = index_routes_1.router;

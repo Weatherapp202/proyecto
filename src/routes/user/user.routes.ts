@@ -21,5 +21,5 @@ router.post("/user/deleteUser", deleteUser);
 router.post("/permission/addPermision", addPermision);
 router.post("/permission/deletePermission", deletePermissionInUser);
 router.post("/user/makeAdmin", makeAdmin);
-router.post("user/deleteAdmin", deleteAdmin);
+router.post("/user/deleteAdmin", deleteAdmin);
 export default router;
