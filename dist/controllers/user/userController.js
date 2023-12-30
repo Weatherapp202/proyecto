@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletePermissionInUser = exports.addPermision = exports.deleteUser = exports.addUser = exports.updateUser = exports.getUserByID = exports.getAllUsers = void 0;
+exports.deletePermissionInUser = exports.addPermision = exports.deleteUser = exports.deleteAdmin = exports.makeAdmin = exports.addUser = exports.updateUser = exports.getUserByID = exports.getAllUsers = void 0;
 const index_routes_1 = require("../../routes/index.routes");
 const functions_1 = require("../functions/functions");
 const getAllUsers = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -77,6 +77,42 @@ const addUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.addUser = addUser;
+const makeAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.body;
+    try {
+        const userUpdated = yield index_routes_1.prismaClient.user.update({
+            where: {
+                id: Number(id),
+            },
+            data: {
+                role: "admin",
+            },
+        });
+        (0, functions_1.successfullyMessage)(res, "User successfully updated", userUpdated);
+    }
+    catch (error) {
+        (0, functions_1.errorMessage)(res, error);
+    }
+});
+exports.makeAdmin = makeAdmin;
+const deleteAdmin = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { id } = req.body;
+    try {
+        const userUpdated = yield index_routes_1.prismaClient.user.update({
+            where: {
+                id: Number(id),
+            },
+            data: {
+                role: "user",
+            },
+        });
+        (0, functions_1.successfullyMessage)(res, "User successfully updated", userUpdated);
+    }
+    catch (error) {
+        (0, functions_1.errorMessage)(res, error);
+    }
+});
+exports.deleteAdmin = deleteAdmin;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.body;
     try {
